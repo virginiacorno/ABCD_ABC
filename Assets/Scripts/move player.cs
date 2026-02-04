@@ -7,7 +7,8 @@ public class moveplayer : MonoBehaviour
     public float rotationSpeed = 100f;
 
     public rewardManager rewardManager;
-    public CameraManager cameraManager;
+    public CameraManager cameraManager;  //V: Classic camera mode
+    // public FreeNavigationCamera cameraManager;  //V: Free navigation mode
 
     private Vector3 targetPosition;
     private Quaternion targetRotation;
@@ -16,7 +17,9 @@ public class moveplayer : MonoBehaviour
     
     void Start()
     {
-        targetPosition = transform.position;
+        Vector3 startPos = rewardManager.GetStartPosition();
+        transform.position = startPos;
+        targetPosition = startPos;
         targetRotation = transform.rotation;
     }
     
@@ -35,6 +38,14 @@ public class moveplayer : MonoBehaviour
         {
             MoveToTarget(); 
         }
+    }
+
+    public void SetPosition(Vector3 newPosition) //V: function to position the player on the grid as specified by parameters above
+    {
+        transform.position = newPosition;
+        targetPosition = newPosition;
+        isMoving = false;
+        isRotating = false;
     }
     
     void CheckInput() //V: check keyboard input and set the rotation and movement targets accordingly
@@ -89,7 +100,9 @@ public class moveplayer : MonoBehaviour
 
         if (Quaternion.Angle(transform.rotation, targetRotation) < 0.01f)
         {
-            transform.rotation = targetRotation;
+            //V; ensure rotation is 90 degree multiple
+            float y = Mathf.Round(targetRotation.eulerAngles.y / 90f) * 90f;
+            transform.rotation = Quaternion.Euler(0, y, 0);
             isRotating = false;
         }
     }
