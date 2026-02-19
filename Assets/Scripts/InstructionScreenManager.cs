@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class InstructionScreenManager : MonoBehaviour
 {
-    //public FreeNavigationCamera cameraManager;
-    public CameraManager cameraManager;
+    public FreeNavigationCamera cameraManager;
+    //public CameraManager cameraManager;
     public rewardManager rewardManager;
     public GameObject instructionPanel;
     public GameObject newSeqPanel; //V: screen signalling sequence change

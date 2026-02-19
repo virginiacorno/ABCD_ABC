@@ -63,27 +63,6 @@ public class rewardManager : MonoBehaviour
     private int lastShownRewardIdx = -1;
     public GameObject cueObject;
     public moveplayer player;
-
-    public bool NewRewLocations() //V: checks if the reward locations have changed to call show rewards (needed in ABC version)
-    {
-        if (currentConfigIdx == 0)
-            return true;  // first config always shows
-        
-        var currentPositions = configData.configurations[currentConfigIdx].rewardPositions;
-        var previousPositions = configData.configurations[currentConfigIdx - 1].rewardPositions;
-        
-        // Compare each position
-        for (int i = 0; i < 4; i++)
-        {
-            if (Mathf.Abs(currentPositions[i].x - previousPositions[i].x) > 0.01f ||
-                Mathf.Abs(currentPositions[i].z - previousPositions[i].z) > 0.01f)
-            {
-                return true;  // Positions are different
-            }
-        }
-        
-        return false;  // Positions are the same
-    }
     
     void Awake() //V: Awake() takes precedence over any Start() in any of the scripts, so we make sure all rewards are hidden before starting 
     {
@@ -156,8 +135,8 @@ public class rewardManager : MonoBehaviour
             List<GridPosition> positions = configData.configurations[index].rewardPositions;
             
             // Create new rewards at specified positions
-            currentRewardObjects = new GameObject[4];
-            for (int i = 0; i < 4; i++)
+            currentRewardObjects = new GameObject[positions.Count];
+            for (int i = 0; i < positions.Count; i++)
             {
                 Vector3 worldPos = positions[i].ToVector3();
                 currentRewardObjects[i] = Instantiate(rewardPrefab, worldPos, Quaternion.identity);
@@ -242,7 +221,7 @@ public class rewardManager : MonoBehaviour
                 
                 nextRewardIdx += config.IsBackw ? -1 : 1; //V: if it's a backward trial, subtract 1 (otherwise add 1)
                 
-                if (config.IsABCType && nextRewardIdx == 3 && (repsCompleted + 1 < configData.trialsPerConfig))
+                if (config.IsABCType && nextRewardIdx == 1)
                 {
                     if (cueObject != null)
                     {
@@ -319,22 +298,14 @@ public class rewardManager : MonoBehaviour
 
                 if (camManager != null && camManager.enabled)
                 {
-                    if (NewRewLocations())
-                    {
-                        instructionManager.NewSequenceInstructions(); //V: have top down view of the next configuration start a few seconds after trial is completed
-                    }
-                    else
-                    {
-                        Invoke("LoadConfiguration", 1f);
-                        Invoke("ResetTrial", 1f);
-                    }
+                    instructionManager.NewSequenceInstructions(); //V: have top down view of the next configuration start a few seconds after trial is completed
                 } 
                 else if (freeNavCam != null && freeNavCam.enabled)
                 {
                     LoadConfiguration(currentConfigIdx);
+                    Debug.Log("Calling new sequence");
                     instructionManager.NewSequenceInstructions();
                 }
-                
   
             }
             else

@@ -15,8 +15,8 @@ public class moveplayer : MonoBehaviour
     public float rotationSpeed = 100f;
 
     public rewardManager rewardManager;
-    public CameraManager cameraManager;  //V: Classic camera mode
-    //public FreeNavigationCamera cameraManager;  //V: Free navigation mode
+    //public CameraManager cameraManager;  //V: Classic camera mode
+    public FreeNavigationCamera cameraManager;  //V: Free navigation mode
 
     public bool inputEnabled = true; //V: allows to detect key input, turned off at the end of trials when transition screens/resets are called
 

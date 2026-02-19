@@ -197,7 +197,7 @@ public class CameraManager : MonoBehaviour
     IEnumerator TransitionToFirstPerson()
     {
         //V: disable tbackwarning warning and log it
-                if (backwWarning.activeSelf) //V: de-activate the backw warning and log it (if it was active)
+        if (backwWarning.activeSelf) //V: de-activate the backw warning and log it (if it was active)
         {
             LogData(new System.Collections.Generic.Dictionary<string, object>
             {
