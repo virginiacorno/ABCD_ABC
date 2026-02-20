@@ -19,6 +19,7 @@ public class moveplayer : MonoBehaviour
     public FreeNavigationCamera cameraManager;  //V: Free navigation mode
 
     public bool inputEnabled = true; //V: allows to detect key input, turned off at the end of trials when transition screens/resets are called
+    public bool rotateOnly = false; //V: needed for practice trials, where we don't need to move forward/backward
 
     private Vector3 targetPosition;
     private Quaternion targetRotation;
@@ -75,6 +76,7 @@ public class moveplayer : MonoBehaviour
 
         if (keyboard.upArrowKey.wasPressedThisFrame) //V: up key is the only one allowing to move, the other ones are just controlling rotations
         {
+            if (rotateOnly) return;
             Vector3 potentialTarget = transform.position + (transform.forward * gridStepSize);
             if (WithinBounds(potentialTarget))
             {
@@ -110,7 +112,7 @@ public class moveplayer : MonoBehaviour
                 {"key_pressed", keyPressed},
                 {"t_curr_run", keyPressTime},
                 {"curr_loc_x", oldPosition.x},
-                {"curr_loc_y", oldPosition.z}
+                {"curr_loc_z", oldPosition.z}
             });
     }
 
