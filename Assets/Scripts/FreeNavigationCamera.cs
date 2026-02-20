@@ -25,7 +25,7 @@ public class FreeNavigationCamera : MonoBehaviour
         SetupGameplayCameras();
     }
 
-    void SetupGameplayCameras()
+    public void SetupGameplayCameras()
     {
         firstPersonCamera.enabled = true;
         miniMapCamera.enabled = true;
