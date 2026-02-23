@@ -15,7 +15,7 @@ public class FreeNavigationCamera : MonoBehaviour
     public GameObject player;
     public rewardManager rewardManager;
 
-    private bool _startGameAfterTransition = false;
+    [HideInInspector] public bool _startGameAfterTransition = false;
     
     [Header("Transition Settings")]
     public float transitionDuration = 2.5f;

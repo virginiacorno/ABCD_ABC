@@ -119,7 +119,8 @@ public class InstructionScreenManager : MonoBehaviour
             
         } else if (freeNavCam != null && freeNavCam.enabled)
         {
-            rewardManager.StartNextConfigForFreeNav();
+            freeNavCam._startGameAfterTransition = true;
+            cameraManager.StartCameraTransition();
         }
     }
 
