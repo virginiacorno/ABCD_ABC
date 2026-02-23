@@ -10,6 +10,8 @@ public class InstructionScreenManager : MonoBehaviour
     public GameObject cuePanel;
     public GameObject newSeqPanel; //V: screen signalling sequence change
     public GameObject endPanel;
+    public moveplayer player;
+    public PracticePhase practicePhase;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,7 +40,34 @@ public class InstructionScreenManager : MonoBehaviour
         endPanel.SetActive(false);
         Time.timeScale = 1f;
 
-        PracticeInstructions(); //V: call istructions for practice phase
+        ShowCuePanel(); //V: show cue
+    }
+
+    public void ShowCuePanel()
+    {
+        player.inputEnabled = false;
+        cuePanel.SetActive(true);
+        practicePanel.SetActive(false);
+        instructionPanel.SetActive(false);
+        newSeqPanel.SetActive(false);
+        endPanel.SetActive(false);
+
+        //V: disable the minimap so we can see the cue
+        cameraManager.DisableMiniMap();
+        //V: make cue in the scene visible
+        rewardManager.cueObject.SetActive(true);
+    }
+
+    public void OnCueButton()
+    {
+        rewardManager.HideCue();
+        cuePanel.SetActive(false);
+        practicePanel.SetActive(false);
+        instructionPanel.SetActive(false);
+        newSeqPanel.SetActive(false);
+        endPanel.SetActive(false);
+
+        PracticeInstructions();
     }
 
     public void PracticeInstructions()
@@ -60,30 +89,10 @@ public class InstructionScreenManager : MonoBehaviour
         endPanel.SetActive(false);
         Time.timeScale = 1f;
 
-    }
+        practicePhase.StartPractice(); //V start the practice phase
 
-    public void ShowCuePanel()
-    {
-        cuePanel.SetActive(true);
-        practicePanel.SetActive(false);
-        instructionPanel.SetActive(false);
-        newSeqPanel.SetActive(false);
-        endPanel.SetActive(false);
+        //cameraManager.StartNewConfiguration(0); //V: actually start the game
 
-        //V: make reward in the scene visible
-        rewardManager.cueObject.SetActive(true);
-    }
-
-    public void OnCueButton()
-    {
-        rewardManager.HideCue();
-        cuePanel.SetActive(false);
-        practicePanel.SetActive(false);
-        instructionPanel.SetActive(false);
-        newSeqPanel.SetActive(false);
-        endPanel.SetActive(false);
-
-        cameraManager.StartNewConfiguration(0); //V: actually start the game
     }
 
     public void NewSequenceInstructions()

@@ -9,13 +9,15 @@ public class PracticePhase : MonoBehaviour
     private float lastYRotation;
     private float accumulatedRotation = 0f;
     private bool practiceComplete = false;
+    private bool practiceStarted = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void StartPractice()
     {
-        freeNavCamera.SetupGameplayCameras(); // set up first person view
+        practiceStarted = true;
         //V: set the player position
         player.transform.position = new Vector3(5f, 1f, 15.3f);
+        freeNavCamera.StartCameraTransition(); // start the transition
         //V: ensure inputs are enabled but only possible to rotate (vs also moving)
         player.inputEnabled = true;
         player.rotateOnly = true;
@@ -24,13 +26,22 @@ public class PracticePhase : MonoBehaviour
 
     void Update()
     {
+        if (practiceStarted && !practiceComplete)
+        {
+            CheckRotations();
+        }
+    }
+
+    void CheckRotations()
+    {
         //V: check if we have done all the rotations needed
         if (rotationsCompleted == 3 && practiceComplete != true)
         {
             practiceComplete = true;
             //V: call game start screen and disable player movement
             player.inputEnabled = false;
-            instructionScreenManager.ShowCuePanel();;
+            //instructionScreenManager.ShowCuePanel();
+            freeNavCamera.StartNewConfiguration(0);
         }
         else
         {

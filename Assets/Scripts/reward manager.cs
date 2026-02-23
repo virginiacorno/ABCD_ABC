@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem; 
 
@@ -221,24 +222,6 @@ public class rewardManager : MonoBehaviour
                 
                 nextRewardIdx += config.IsBackw ? -1 : 1; //V: if it's a backward trial, subtract 1 (otherwise add 1)
                 
-                if (config.IsABCType && nextRewardIdx == 1)
-                {
-                    if (cueObject != null)
-                    {
-                        cueObject.SetActive(true);
-                        
-                        LogData(new System.Collections.Generic.Dictionary<string, object>
-                        {
-                            {"event_type", "cue_displayed"},
-                            {"cue_displayed", true},
-                            {"cue_time", CurrentRunTime()},
-                            {"t_curr_run", CurrentRunTime()}
-                        });
-                        
-                        Debug.Log("Cue displayed - ABC sequence at C");
-                    }
-                }
-                
                 if (nextRewardIdx >= rewardsToCollect || nextRewardIdx < 0)
                 {
                     player.inputEnabled = false;
@@ -333,8 +316,14 @@ public class rewardManager : MonoBehaviour
         HideAllRewards();
         nextRewardIdx = GetStartIndex();
         lastShownRewardIdx = -1;
+        player.rotateOnly = false;
 
-        player.inputEnabled = true;
+        player.cameraManager.SetupGameplayCameras();
+
+        if (configData.configurations[currentConfigIdx].IsABCType)
+            StartCoroutine(ShowCue());
+        else
+            player.inputEnabled = true;
 
         LogData(new System.Collections.Generic.Dictionary<string, object>
         {
@@ -356,9 +345,12 @@ public class rewardManager : MonoBehaviour
         HideCue();
         nextRewardIdx = GetStartIndex();
         lastShownRewardIdx = -1;
-        player.inputEnabled = true;
+        player.rotateOnly = false;
 
-        // Player stays where they are (at last reward D or C) - no teleportation needed
+        if (configData.configurations[currentConfigIdx].IsABCType)
+            StartCoroutine(ShowCue());
+        else
+            player.inputEnabled = true;
 
         Debug.Log($"Starting trial {repsCompleted + 1}/{configData.trialsPerConfig} of Config {currentConfigIdx}");
     }
@@ -438,6 +430,32 @@ public class rewardManager : MonoBehaviour
         {
             cueObject.SetActive(false);
         }
+    }
+
+    IEnumerator ShowCue()
+    {
+        //V: block the player
+        player.inputEnabled = false;
+
+        //V: show cue and log it 
+        if (cueObject != null)
+        {
+            cueObject.SetActive(true);
+            LogData(new System.Collections.Generic.Dictionary<string, object>
+            {
+                {"event_type", "cue_displayed"},
+                {"cue_displayed", true},
+                {"cue_time", CurrentRunTime()},
+                {"t_curr_run", CurrentRunTime()}
+            });
+        }
+        //V: block the player for 2 seconds so sure we see the cue
+        yield return new WaitForSeconds(2f);
+
+        //V: hide cue and re-enable movement
+        HideCue();
+        player.inputEnabled = true;
+
     }
 
     public Vector3 GetStartPosition()
