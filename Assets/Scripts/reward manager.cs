@@ -221,6 +221,14 @@ public class rewardManager : MonoBehaviour
                 lastShownRewardIdx = nextRewardIdx;
                 
                 nextRewardIdx += config.IsBackw ? -1 : 1; //V: if it's a backward trial, subtract 1 (otherwise add 1)
+
+                if (configData.configurations[currentConfigIdx].IsABCType)
+                {
+                    if (repsCompleted != 0 && nextRewardIdx == 1)
+                    {
+                        StartCoroutine(ShowCue());
+                    }
+                }                
                 
                 if (nextRewardIdx >= rewardsToCollect || nextRewardIdx < 0)
                 {
@@ -347,9 +355,9 @@ public class rewardManager : MonoBehaviour
         lastShownRewardIdx = -1;
         player.rotateOnly = false;
 
-        if (configData.configurations[currentConfigIdx].IsABCType)
-            StartCoroutine(ShowCue());
-        else
+        //if (configData.configurations[currentConfigIdx].IsABCType)
+            //StartCoroutine(ShowCue());
+        //else
             player.inputEnabled = true;
 
         Debug.Log($"Starting trial {repsCompleted + 1}/{configData.trialsPerConfig} of Config {currentConfigIdx}");
@@ -369,7 +377,7 @@ public class rewardManager : MonoBehaviour
                 {"event_type", "reward"},
                 {"reward_onset_time", CurrentRunTime()},
                 {"rew_loc_x", currentRewardObjects[index].transform.position.x},
-                {"rew_loc_y", currentRewardObjects[index].transform.position.z},
+                {"rew_loc_z", currentRewardObjects[index].transform.position.z},
                 {"reward_letter", (char)('A' + index)},
                 {"reward_index", index},
                 {"config_index", currentConfigIdx},

@@ -254,7 +254,8 @@ public class CameraManager : MonoBehaviour
         {
             {"event_type", "game_phase_start"},
             {"start_loc_x", player.transform.position.x},
-            {"start_loc_y", player.transform.position.z},
+            {"start_loc_y", player.transform.position.y},
+            {"start_loc_z", player.transform.position.z},
             {"config_name", rewardManager.GetCurrentConfigName()},
             {"t_curr_run", CurrentRunTime()}
         });
